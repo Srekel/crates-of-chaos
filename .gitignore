@@ -5,9 +5,9 @@
  
 
 #NOTE: this will cause your collaborators to re-import assets periodically
-Temp/*
-Library/*
-Build/*
+Crates Of Chaos/Temp/*
+Crates Of Chaos/Library/*
+Crates Of Chaos/Build/*
 #Un-ignore these specific files
 !Library/*.asset
 !Library/AssetImportState
