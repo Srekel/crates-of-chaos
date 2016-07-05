@@ -8,8 +8,7 @@ public class Spawner_RandomDirection : MonoBehaviour {
 	public float power_min = 50;
 	public float power_max = 100;
 	public float spawn_time = 2;
-
-	// Use this for initialization
+	
 	void Start () {
 		SpawnerSystem.instance.AddSpawner(this);
 	}
