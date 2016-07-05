@@ -8,6 +8,18 @@
 Crates Of Chaos/Temp/*
 Crates Of Chaos/Library/*
 Crates Of Chaos/Build/*
+
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
 #Un-ignore these specific files
 !Library/*.asset
 !Library/AssetImportState
