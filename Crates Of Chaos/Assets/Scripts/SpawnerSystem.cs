@@ -19,12 +19,12 @@ public class SpawnerSystem : MonoBehaviour {
 		for (int i = 0; i < spawners.Count; i++)
 		{
 			var spawn_time = spawn_timers[i];
-			if (spawn_time > time)
+			if (time > spawn_time)
 			{
 				var spawner = spawners[i];
 				var rotation = spawner.transform.rotation; // todo add angle
-				var position = spawner.transform.position; // todo add offset
-				var spawned_object = (ISpawnable)Instantiate(spawner.prefab_to_spawn, position, rotation);
+				var position = spawner.transform.position + Vector3.up * 2; // todo add offset
+				var spawned_object = (Spawnable)Instantiate(spawner.prefab_to_spawn, position, rotation);
 				spawner.OnSpawned(spawned_object);
 
 				spawn_timers[i] = time + spawner.spawn_time;
@@ -45,11 +45,12 @@ public class SpawnerSystem : MonoBehaviour {
 		{
 			if (spawners[i] == spawner)
 			{
-				spawners[i] = spawners[spawners.Count];
-				spawners.RemoveAt(spawners.Count - 1); // todo verify this
+				// Swap in the last one, pop it away
+				spawners[i] = spawners[spawners.Count - 1];
+				spawners.RemoveAt(spawners.Count - 1);
 
-				spawn_timers[i] = spawn_timers[spawners.Count];
-				spawn_timers.RemoveAt(spawn_timers.Count - 1); // todo verify this
+				spawn_timers[i] = spawn_timers[spawn_timers.Count - 1];
+				spawn_timers.RemoveAt(spawn_timers.Count - 1); 
 
 				break;
 			}
