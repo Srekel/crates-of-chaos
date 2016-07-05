@@ -9,7 +9,6 @@ public class InputSphere : MonoBehaviour {
     }
 
     public void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("On trigger enter");
         if (other.gameObject.CompareTag("Crate")) {
             CrateCollision(other.gameObject);
         }
