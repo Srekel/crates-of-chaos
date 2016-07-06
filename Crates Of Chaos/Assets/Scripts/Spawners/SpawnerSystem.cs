@@ -25,7 +25,7 @@ public class SpawnerSystem : MonoBehaviour {
 				var position = spawner.transform.position + spawner.transform.up * 2; // todo add offset
 				var spawned_object = (Spawnable)Instantiate(spawner.prefab_to_spawn, position, rotation);
 				spawner.OnSpawned(spawned_object);
-
+                spawned_object.transform.SetParent(GameSceneManager.Instance.SpawnerParent.transform);
 				spawner.time_of_next_spawn = time + spawner.spawn_time;
 			}
 		}
