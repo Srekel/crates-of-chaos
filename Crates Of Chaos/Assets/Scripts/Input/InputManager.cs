@@ -25,9 +25,18 @@ public class InputManager : MonoBehaviour {
                 Debug.LogError("Mouse did not hit background wall, how did we get here?");
             }
         }
-       
-        
-    }
+
+		if (Input.GetMouseButtonDown(1))
+		{
+			Time.timeScale = 0.1f;
+			Time.fixedDeltaTime = 0.02F * Time.timeScale;
+		}
+        else if (Input.GetMouseButtonUp(1))
+		{
+			Time.timeScale = 1f;
+			Time.fixedDeltaTime = 0.02F * Time.timeScale;
+		}
+	}
 
     void CreateRaidalGrabber(Vector3 position) {
         GameObject crateGrabber = (GameObject)Instantiate(CrateGrabberPrefab, position, Quaternion.identity);

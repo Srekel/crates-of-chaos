@@ -19,6 +19,7 @@ public class Spawner_Weapon : Spawner {
 		targeter = this.gameObject.transform.parent.FindChild("Targeter").GetComponent<Targeter>();
 		targeter.target_changed += Targeter_target_changed;
 		//SpawnerSystem.instance.AddSpawner(this, true);
+		current_ammo = ammo;
 	}
 
 	private void Targeter_target_changed()
@@ -31,7 +32,7 @@ public class Spawner_Weapon : Spawner {
 		else if(!active)
 		{
 			active = true;
-			SpawnerSystem.instance.AddSpawner(this, time_to_reload);
+			SpawnerSystem.instance.AddSpawner(this, time_between_shots);
 		}
 	}
 
@@ -69,14 +70,23 @@ public class Spawner_Weapon : Spawner {
 
 		spawned_object.transform.up = direction;
 
+		var seeker = spawned_object.GetComponent<Seeker_Thrust>();
+		if (seeker)
+		{
+			seeker.SetTarget(targeter.current_target);
+		}
+
 		current_ammo -= 1;
 		if (current_ammo == 0)
 		{
 			current_ammo = ammo;
 			time_until_next_spawn = time_to_reload;
 		}
+		else
+		{
+			time_until_next_spawn = time_between_shots;
+		}
 
-		time_until_next_spawn = time_between_shots;
 		return spawned_object.gameObject;
 	}
 }
