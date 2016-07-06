@@ -10,6 +10,9 @@ public class Targeter : MonoBehaviour
 	public GameObject current_target;
 
 	private List<GameObject> valid_targets = new List<GameObject>();
+
+	public delegate void ChangedEventHandler();
+	public event ChangedEventHandler target_changed;
 	
 	void OnDisable()
 	{
@@ -27,6 +30,9 @@ public class Targeter : MonoBehaviour
 		{
 			current_target = other.gameObject;
 			TargetSystem.instance.AddTargeter(this);
+
+			if(target_changed != null)
+				target_changed();
 		}
 	}
 
@@ -47,6 +53,9 @@ public class Targeter : MonoBehaviour
 			{
 				current_target = valid_targets[0];
 			}
+
+			if (target_changed != null)
+				target_changed();
 		}
 	}
 }
