@@ -53,5 +53,11 @@ public class AINodeFollower : MonoBehaviour {
 			previous_nodes[2] = new_node;
 			current_node = new_node;
 		}
+
+		if (transform.right.x > 0 && rigid_body.velocity.x > 0 ||
+			transform.right.x < 0 && rigid_body.velocity.x < 0)
+		{
+			transform.Rotate(Vector3.up, 180);
+		}
 	}
 }

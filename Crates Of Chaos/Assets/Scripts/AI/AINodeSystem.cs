@@ -41,13 +41,14 @@ public class AINodeSystem : MonoBehaviour {
 					break;
 				}
 			}
+
 			if (ignore)
 			{
 				continue;
 			}
 
 			var distance = Vector3.Distance(current_position, node.transform.position);
-			var distance_randomed = distance;// * (1 + Random.value * 0.25);
+			var distance_randomed = distance * (1 + Random.value * 0.25);
 			if (distance_randomed < best_distance)
 			{
 				best_distance = distance;
