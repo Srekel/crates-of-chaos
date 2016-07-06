@@ -46,8 +46,9 @@ public class Spawner_Weapon : Spawner {
 
 	public override GameObject Spawn(out float time_until_next_spawn)
 	{
-		var rotation = transform.rotation; // todo add angle
-		var position = transform.position + transform.up * 2; // todo add offset
+		var rotated_object_transform = targeter.object_to_rotate.transform;
+		var rotation = rotated_object_transform.rotation; 
+		var position = rotated_object_transform.position + rotated_object_transform.up * 2; 
 		var spawned_object = (Spawnable)Instantiate(prefab_to_spawn, position, rotation);
 
 		var rigid_body = spawned_object.rigid_body;
@@ -56,11 +57,11 @@ public class Spawner_Weapon : Spawner {
 		var power = Mathf.Lerp(power_min, power_max, Random.value);
 
 		var x =
-			this.transform.up.x * Mathf.Sin(angle_radians) +
-			this.transform.up.y * Mathf.Sin(angle_radians);
+			rotated_object_transform.up.x * Mathf.Sin(angle_radians) +
+			rotated_object_transform.up.y * Mathf.Sin(angle_radians);
 		var y =
-			this.transform.up.x * Mathf.Cos(angle_radians) +
-			this.transform.up.y * Mathf.Cos(angle_radians);
+			rotated_object_transform.up.x * Mathf.Cos(angle_radians) +
+			rotated_object_transform.up.y * Mathf.Cos(angle_radians);
 
 		var direction = new Vector2(x, y);
 		var impulse = direction * power;
