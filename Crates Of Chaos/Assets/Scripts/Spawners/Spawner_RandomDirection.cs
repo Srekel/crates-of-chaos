@@ -3,21 +3,26 @@ using System.Collections;
 
 public class Spawner_RandomDirection : Spawner
 {
+	public float spawn_time = 2;
 	public float angle_spread = 30;
 	public float power_min = 50;
 	public float power_max = 100;
 
 	void Start () {
-		SpawnerSystem.instance.AddSpawner(this, true);
+		SpawnerSystem.instance.AddSpawner(this, spawn_time);
 	}
 
 	void OnDestroy()
 	{
 		SpawnerSystem.instance.RemoveSpawner(this);
 	}
-	
-	public override void OnSpawned(Spawnable spawned_object) 
+
+	public override GameObject Spawn(out float time_until_next_spawn)
 	{
+		var rotation = transform.rotation; // todo add angle
+		var position = transform.position + transform.up * 2; // todo add offset
+		var spawned_object = (Spawnable)Instantiate(prefab_to_spawn, position, rotation);
+
 		var rigid_body = spawned_object.rigid_body;
 		float angle_degrees = Random.value * angle_spread - angle_spread * 0.5f;
 		var angle_radians = angle_degrees * Mathf.Deg2Rad;
@@ -37,5 +42,8 @@ public class Spawner_RandomDirection : Spawner
 		rigid_body.AddTorque(torque, ForceMode2D.Impulse);
 
 		spawned_object.transform.up = direction;
+
+		time_until_next_spawn = spawn_time;
+		return spawned_object.gameObject;
 	}
 }

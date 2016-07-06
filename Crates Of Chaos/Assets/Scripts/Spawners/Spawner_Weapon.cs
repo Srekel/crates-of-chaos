@@ -6,9 +6,13 @@ public class Spawner_Weapon : Spawner {
 	public float angle_spread = 30;
 	public float power_min = 25;
 	public float power_max = 50;
+	public int ammo = 3;
+	public float time_to_reload = 1;
+	public float time_between_shots = 0.1f;
 	
 	private Targeter targeter;
 	private bool active = false;
+	private int current_ammo;
 
 	void Start()
 	{
@@ -27,7 +31,7 @@ public class Spawner_Weapon : Spawner {
 		else if(!active)
 		{
 			active = true;
-			SpawnerSystem.instance.AddSpawner(this, false);
+			SpawnerSystem.instance.AddSpawner(this, time_to_reload);
 		}
 	}
 
@@ -39,8 +43,12 @@ public class Spawner_Weapon : Spawner {
 		}
 	}
 
-	public override void OnSpawned(Spawnable spawned_object)
+	public override GameObject Spawn(out float time_until_next_spawn)
 	{
+		var rotation = transform.rotation; // todo add angle
+		var position = transform.position + transform.up * 2; // todo add offset
+		var spawned_object = (Spawnable)Instantiate(prefab_to_spawn, position, rotation);
+
 		var rigid_body = spawned_object.rigid_body;
 		float angle_degrees = Random.value * angle_spread - angle_spread * 0.5f;
 		var angle_radians = angle_degrees * Mathf.Deg2Rad;
@@ -60,5 +68,15 @@ public class Spawner_Weapon : Spawner {
 		rigid_body.AddTorque(torque, ForceMode2D.Impulse);
 
 		spawned_object.transform.up = direction;
+
+		current_ammo -= 1;
+		if (current_ammo == 0)
+		{
+			current_ammo = ammo;
+			time_until_next_spawn = time_to_reload;
+		}
+
+		time_until_next_spawn = time_between_shots;
+		return spawned_object.gameObject;
 	}
 }

@@ -26,9 +26,8 @@ public class Targeter : MonoBehaviour
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		var target = other.gameObject.GetComponent<Target>();
+		target.target_destroyed += DealWithTargetBeingRemoved;
 		
-
-
 		valid_targets.Add(other.gameObject);
 		if (current_target == null)
 		{
@@ -38,12 +37,13 @@ public class Targeter : MonoBehaviour
 			if(target_changed != null)
 				target_changed();
 		}
-        target.target_destroyed += DealWithTargetBeingRemoved;
     }
 
 	void OnTriggerExit2D(Collider2D other)
 	{
-        DealWithTargetBeingRemoved(other.gameObject);
+		var target = other.gameObject.GetComponent<Target>();
+		target.target_destroyed -= DealWithTargetBeingRemoved;
+		DealWithTargetBeingRemoved(other.gameObject);
     }
 
     void DealWithTargetBeingRemoved(GameObject target) {
