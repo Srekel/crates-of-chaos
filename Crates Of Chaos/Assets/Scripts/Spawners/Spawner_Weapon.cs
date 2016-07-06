@@ -56,14 +56,17 @@ public class Spawner_Weapon : Spawner {
 		var angle_radians = angle_degrees * Mathf.Deg2Rad;
 		var power = Mathf.Lerp(power_min, power_max, Random.value);
 
-		var x =
-			rotated_object_transform.up.x * Mathf.Sin(angle_radians) +
-			rotated_object_transform.up.y * Mathf.Sin(angle_radians);
-		var y =
-			rotated_object_transform.up.x * Mathf.Cos(angle_radians) +
-			rotated_object_transform.up.y * Mathf.Cos(angle_radians);
+		// http://answers.unity3d.com/questions/661383/whats-the-most-efficient-way-to-rotate-a-vector2-o.html
+		var rotation_sin = Mathf.Sin(angle_radians);
+		var rotation_cos = Mathf.Cos(angle_radians);
 
-		var direction = new Vector2(x, y);
+		var wx = rotated_object_transform.up.x;
+		var wy = rotated_object_transform.up.y;
+		var weapon_direction = new Vector2(wx, wy);
+		weapon_direction.x = (rotation_cos * wx) - (rotation_sin * wy);
+		weapon_direction.y = (rotation_sin * wx) + (rotation_cos * wy);
+
+		var direction = weapon_direction; 
 		var impulse = direction * power;
 		var torque = angle_radians * -1;
 		rigid_body.AddForce(impulse, ForceMode2D.Impulse);
