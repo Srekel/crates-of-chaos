@@ -50,13 +50,13 @@ public class Island : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter2D(Collision2D collision)
+	void OnTriggerEnter2D(Collider2D collision)
 	{
 		ResourceSystem.instance.AddResourceType(resource_type);
 		colliders.Add(collision.gameObject);
 	}
 
-	void OnTriggerExit2D(Collision2D collision)
+	void OnTriggerExit2D(Collider2D collision)
 	{
 		ResourceSystem.instance.RemoveResourceType(resource_type);
 		colliders.Remove(collision.gameObject); // uugh
