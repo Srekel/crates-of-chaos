@@ -38,28 +38,33 @@ public class Targeter : MonoBehaviour
 			if(target_changed != null)
 				target_changed();
 		}
-	}
+        target.target_destroyed += DealWithTargetBeingRemoved;
+    }
 
 	void OnTriggerExit2D(Collider2D other)
 	{
-		int index = valid_targets.IndexOf(other.gameObject);
-		valid_targets[index] = valid_targets[valid_targets.Count - 1];
-		valid_targets.RemoveAt(valid_targets.Count - 1);
+        DealWithTargetBeingRemoved(other.gameObject);
+    }
 
-		if (current_target == other.gameObject)
-		{
-			if (valid_targets.Count == 0)
-			{
-				TargetSystem.instance.RemoveTargeter(this);
-				current_target = null;
-			}
-			else
-			{
-				current_target = valid_targets[0];
-			}
+    void DealWithTargetBeingRemoved(GameObject target) {
+        int index = valid_targets.IndexOf(target);
+        valid_targets[index] = valid_targets[valid_targets.Count - 1];
+        valid_targets.RemoveAt(valid_targets.Count - 1);
 
-			if (target_changed != null)
-				target_changed();
-		}
-	}
+        if (current_target == target)
+        {
+            if (valid_targets.Count == 0)
+            {
+                TargetSystem.instance.RemoveTargeter(this);
+                current_target = null;
+            }
+            else
+            {
+                current_target = valid_targets[0];
+            }
+
+            if (target_changed != null)
+                target_changed();
+        }
+    }
 }
