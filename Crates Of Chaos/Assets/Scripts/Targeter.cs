@@ -25,6 +25,10 @@ public class Targeter : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		var target = other.gameObject.GetComponent<Target>();
+		
+
+
 		valid_targets.Add(other.gameObject);
 		if (current_target == null)
 		{

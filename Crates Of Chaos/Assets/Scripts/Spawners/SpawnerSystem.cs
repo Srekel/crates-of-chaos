@@ -22,7 +22,7 @@ public class SpawnerSystem : MonoBehaviour {
 			if (time > spawn_time)
 			{
 				var rotation = spawner.transform.rotation; // todo add angle
-				var position = spawner.transform.position + Vector3.up * 5; // todo add offset
+				var position = spawner.transform.position + spawner.transform.up * 2; // todo add offset
 				var spawned_object = (Spawnable)Instantiate(spawner.prefab_to_spawn, position, rotation);
 				spawner.OnSpawned(spawned_object);
 
