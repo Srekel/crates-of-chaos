@@ -30,12 +30,17 @@ public class InputManager : MonoBehaviour {
             if(CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame || CurrentMouseStatus == MouseStatus.RightMouseDownFirstFrame) {
                 Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 				LayerMask layerMask = CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame ? LeftClickRaycastLayer : RightClickRaycastLayer;
+				float sphereRadius = CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame ? 0f : 2f;
 				if (Physics.SphereCast(ray, 2f, out lastHit, 1000f, layerMask))
                 {
-					Debug.Log (lastHit.collider.gameObject.name);
                     if (CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame)
                     {
-                        CreateRaidalGrabber(lastHit.point);
+						if (lastHit.collider.gameObject.CompareTag ("GameWall")) {
+							CreateRaidalGrabber (lastHit.point);
+						} else {
+							// Create menu
+							RadialMenu.BuildingClicked(lastHit.collider.gameObject);
+						}
                     }
                     else if(CurrentMouseStatus == MouseStatus.RightMouseDownFirstFrame) {
 						if (lastHit.collider.gameObject.CompareTag ("Crate")) {

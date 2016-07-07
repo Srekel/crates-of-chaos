@@ -9,6 +9,8 @@ public class SpriteManager : MonoBehaviour {
 
     public Sprite BasicTower;
     public Sprite BlueTower;
+	public Sprite Cancel;
+
     public static SpriteManager Instance;
     
 
