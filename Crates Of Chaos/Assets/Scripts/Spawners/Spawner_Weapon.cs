@@ -9,7 +9,14 @@ public class Spawner_Weapon : Spawner {
 	public int ammo = 3;
 	public float time_to_reload = 1;
 	public float time_between_shots = 0.1f;
-	
+
+	[HideInInspector]
+	public int ammo_modified;
+	[HideInInspector]
+	public float time_to_reload_modified;
+	[HideInInspector]
+	public float time_between_shots_modified;
+
 	private Targeter targeter;
 	private bool active = false;
 	private int current_ammo;
