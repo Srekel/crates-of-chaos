@@ -14,7 +14,7 @@ public class Spawner_Headquarters : Spawner
 	public Spawnable red_resource_prefab;
 	//public Dictionary<ResourceSystem.ResourceType, Spawnable> resources = new Dictionary<ResourceSystem.ResourceType, Spawnable>();
 
-	private List<ResourceSystem.ResourceType> to_spawn = new List<ResourceSystem.ResourceType>();
+	private List<Spawnable> to_spawn = new List<Spawnable>();
 	private int current_spawn_index = 0;
 
 	void Start () {
@@ -30,27 +30,28 @@ public class Spawner_Headquarters : Spawner
 	{
 		if (current_spawn_index == to_spawn.Count)
 		{
+			current_spawn_index = 0;
 			to_spawn.Clear();
-			to_spawn.Add(ResourceSystem.ResourceType.Basic);
+			to_spawn.Add(basic_resource_prefab);
 			if (ResourceSystem.instance.IsResourceTypeAvailable(ResourceSystem.ResourceType.Blue))
 			{
-				to_spawn.Add(ResourceSystem.ResourceType.Blue);
+				to_spawn.Add(blue_resource_prefab);
 			}
 
-			if (ResourceSystem.instance.IsResourceTypeAvailable(ResourceSystem.ResourceType.Blue))
+			if (ResourceSystem.instance.IsResourceTypeAvailable(ResourceSystem.ResourceType.Red))
 			{
-				to_spawn.Add(ResourceSystem.ResourceType.Red);
+				to_spawn.Add(red_resource_prefab);
 			}
 		}
+
+		var prefab = to_spawn[current_spawn_index];
 		current_spawn_index++;
-
-
 
 		var rotated_object_transform = transform;
 		var rotation = rotated_object_transform.rotation;
 		var position = rotated_object_transform.position + rotated_object_transform.up * 2;
 
-		var spawned_object = (Spawnable)Instantiate(prefab_to_spawn, position, rotation);
+		var spawned_object = (Spawnable)Instantiate(prefab, position, rotation);
 
 		var rigid_body = spawned_object.rigid_body;
 		float angle_degrees = Random.value * angle_spread - angle_spread * 0.5f;
@@ -82,8 +83,7 @@ public class Spawner_Headquarters : Spawner
 		{
 			time_until_next_spawn = time_between_resources;
 		}
-
-		time_until_next_spawn = spawn_time;
+		
 		return spawned_object.gameObject;
 	}
 }
