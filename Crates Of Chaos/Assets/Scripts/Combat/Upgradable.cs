@@ -4,13 +4,14 @@ using System.Collections;
 public class Upgradable : MonoBehaviour {
 
 	public int level = 1;
-	public int strength = 3;
+	public int strength = 4;
 
 	private int needed_for_next_level = 0;
 	public float modifier = 1;
 
 	private Health health_component;
 	private Spawner_Weapon weapon_component;
+	private Tower_Layered tower_component;
 
 	// Use this for initialization
 	void Start () {
@@ -26,10 +27,12 @@ public class Upgradable : MonoBehaviour {
 		weapon_component.time_to_reload_modified = weapon_component.time_to_reload_modified / modifier;
 		weapon_component.time_between_shots_modified = weapon_component.time_between_shots_modified / modifier;
 
-		gameObject.transform.parent.GetComponentInChildren<CrateCollector>().collected += Upgradable_collected;
+		tower_component = gameObject.transform.parent.gameObject.GetComponent<Tower_Layered>();
+
+		gameObject.transform.parent.GetComponentInChildren<CrateCollector>().collected += Crystal_collected;
 	}
 
-	private void Upgradable_collected(GameObject target)
+	private void Crystal_collected(GameObject target)
 	{
 		needed_for_next_level--;
 		if (needed_for_next_level == 0)
@@ -46,10 +49,12 @@ public class Upgradable : MonoBehaviour {
 			weapon_component.time_to_reload_modified = weapon_component.time_to_reload_modified / modifier;
 			weapon_component.time_between_shots_modified = weapon_component.time_between_shots_modified / modifier;
 
+			tower_component.Upgrade();
+
 			if (level == 3)
 			{
 				var collector = gameObject.transform.parent.GetComponentInChildren<CrateCollector>();
-				collector.collected -= Upgradable_collected;
+				collector.collected -= Crystal_collected;
 
 				var collector_collider = collector.gameObject.GetComponent<Collider2D>();
 				collector_collider.enabled = false;
@@ -61,7 +66,7 @@ public class Upgradable : MonoBehaviour {
 	{
 		GUI.enabled = true;
 		Camera cam = Camera.main;
-		Vector3 pos = cam.WorldToScreenPoint(transform.position + new Vector3(0, 3, 0));
+		Vector3 pos = cam.WorldToScreenPoint(transform.position + new Vector3(0, 6, 0));
 		GUI.Label(new Rect(pos.x, Screen.height - pos.y, 150, 130), "str=" + (strength-needed_for_next_level).ToString() + "/" + strength.ToString() + ", level=" + level.ToString());
 	}
 }
