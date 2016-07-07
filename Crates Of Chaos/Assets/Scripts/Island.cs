@@ -26,11 +26,16 @@ public class Island : MonoBehaviour {
 			var lol = gameObject.transform.FindChild("CrystalSlots");
 			var index = Random.Range(0, lol.transform.childCount);
 			var child = lol.transform.GetChild(index);
-			var slottything = (GameObject)Instantiate(ResourceSystem.instance.red_island_slot_prefab, child.transform.position, child.transform.rotation);
-			var rb = slottything.GetComponent<Rigidbody2D>();
-			if (rb != null)
+			for (int i = 0; i < 5; i++)
 			{
-				rb.isKinematic = true;
+				var pos = child.transform.position + new Vector3(Random.value*1, Random.value*1, -Random.value * 1f);
+				var rot = Quaternion.AngleAxis(Random.value * 180, new Vector3(Random.value, Random.value, Random.value).normalized);
+				var slottything = (GameObject)Instantiate(ResourceSystem.instance.red_island_slot_prefab, pos, rot);
+				var rb = slottything.GetComponent<Rigidbody2D>();
+				if (rb != null)
+				{
+					rb.isKinematic = true;
+				}
 			}
 		}
 	}
