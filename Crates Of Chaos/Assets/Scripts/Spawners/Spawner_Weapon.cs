@@ -23,7 +23,7 @@ public class Spawner_Weapon : Spawner {
 
 	void Start()
 	{
-		targeter = this.gameObject.transform.parent.FindChild("Targeter").GetComponent<Targeter>();
+	
 		targeter.target_changed += Targeter_target_changed;
 		//SpawnerSystem.instance.AddSpawner(this, true);
 		current_ammo = ammo;

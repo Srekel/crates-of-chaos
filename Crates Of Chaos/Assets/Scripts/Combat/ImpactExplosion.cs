@@ -17,7 +17,8 @@ public class ImpactExplosion : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
-		Instantiate(explosion_effect, transform.position, Quaternion.identity);
+		var ps = (ParticleSystem)Instantiate(explosion_effect, transform.position, Quaternion.identity);
+		ps.Play();
 		GameObject.Destroy(gameObject);
 
 		var health = other.gameObject.GetComponent<Health>();

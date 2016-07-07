@@ -16,7 +16,7 @@ public class Upgradable : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		needed_for_next_level = strength;
-		modifier = level * (1 + strength * 0.5f);
+		modifier = 1 + (level - 1) * strength * 0.5f;
 
 		health_component = gameObject.GetComponent<Health>();
 		health_component.max_health = (int)(health_component.base_health * modifier);
@@ -39,7 +39,7 @@ public class Upgradable : MonoBehaviour {
 		{
 			needed_for_next_level = strength;
 			++level;
-			modifier = level * (1 + strength * 0.5f);
+			modifier = 1 + (level - 1) * strength * 0.5f;
 
 			float health_ratio = health_component.current_health / health_component.max_health;
 			health_component.max_health = (int)(health_component.base_health * modifier);

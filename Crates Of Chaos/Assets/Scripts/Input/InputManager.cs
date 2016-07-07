@@ -55,18 +55,16 @@ public class InputManager : MonoBehaviour {
                 }
             }
         }
-		/*
-		if (Input.GetMouseButtonDown(1))
+		if (Input.GetKey(KeyCode.Space))
 		{
 			Time.timeScale = 0.1f;
 			Time.fixedDeltaTime = 0.02F * Time.timeScale;
 		}
-        else if (Input.GetMouseButtonUp(1))
+        else
 		{
 			Time.timeScale = 1f;
 			Time.fixedDeltaTime = 0.02F * Time.timeScale;
 		}
-		*/
 	}
 
     void CreateRaidalGrabber(Vector3 position) {
