@@ -60,7 +60,7 @@ public class Upgradable : MonoBehaviour {
 	void OnGUI ()
 	{
 		GUI.enabled = true;
-		Camera cam = Camera.current;
+		Camera cam = Camera.main;
 		Vector3 pos = cam.WorldToScreenPoint(transform.position + new Vector3(0, 3, 0));
 		GUI.Label(new Rect(pos.x, Screen.height - pos.y, 150, 130), "str=" + (strength-needed_for_next_level).ToString() + "/" + strength.ToString() + ", level=" + level.ToString());
 	}
