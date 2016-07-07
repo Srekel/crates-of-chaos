@@ -16,7 +16,7 @@ public class Tower_Layered : MonoBehaviour {
 	GameObject go2;
 	GameObject go3;
 	GameObject platform_go;
-	GameObject weapon_go;
+	public GameObject weapon_go;
 	GameObject tower_parts;
 
 	void Start ()
