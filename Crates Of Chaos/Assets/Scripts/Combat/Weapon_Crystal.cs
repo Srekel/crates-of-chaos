@@ -3,12 +3,14 @@ using System.Collections;
 
 public class Weapon_Crystal : Weapon
 {
-	public float base_projectile_speed = 1;
-	
+	public float base_damage = 10;
+
 	private Targeter targeter;
 	private LineRenderer linerenderer;
 	private SpriteRenderer spriterenderer;
 	private float scale = 0;
+	private float damage_buildup = 0;
+	private float damage_mod = 1;
 	
 	void Start()
 	{
@@ -21,6 +23,7 @@ public class Weapon_Crystal : Weapon
 	{
 		if (targeter.current_target == null)
 		{
+			damage_buildup = 0;
 			scale = Mathf.Max(0, scale - Time.deltaTime);
 		}
 		else
@@ -38,6 +41,8 @@ public class Weapon_Crystal : Weapon
 
 			if (hit.collider == null)
 			{
+				damage_buildup = 0;
+
 				Debug.DrawLine(linerenderer.transform.position - new Vector3(5, 0, 0), linerenderer.transform.position + new Vector3(5, 0, 0));
 				//renderer.enabled = false;
 				scale = Mathf.Max(0, scale - Time.deltaTime);
@@ -52,6 +57,21 @@ public class Weapon_Crystal : Weapon
 
 				spriterenderer.transform.position = hit.collider.transform.position;
 				scale = Mathf.Min(1, scale + Time.deltaTime);
+				
+				var health = hit.collider.GetComponent<Health>();
+				if (health == null)
+				{
+					damage_buildup = 0;
+				}
+				else
+				{
+					damage_buildup += base_damage * damage_mod * scale * Time.deltaTime;
+					if (damage_buildup > 10)
+					{
+						health.TakeDamage((int)damage_buildup);
+						damage_buildup -= (int)damage_buildup;
+					}
+				}
 			}
 		}
 
@@ -69,6 +89,6 @@ public class Weapon_Crystal : Weapon
 
 	public override void Upgrade(int strength)
 	{
-		base_projectile_speed = base_projectile_speed * (1 + strength * 0.05f);
+		damage_mod = damage_mod * (1 + strength * 0.05f);
 	}
 }
