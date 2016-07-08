@@ -63,4 +63,8 @@ public class ResourceSystem : MonoBehaviour {
 		if(resourceDisplayText != null)
 			resourceDisplayText.text = resources [resource].ToString();
 	}
+
+	public int GetResources(ResourceType resource) {
+		return resources [resource];
+	}
 }
