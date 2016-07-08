@@ -19,9 +19,11 @@ public class RadialButton : MonoBehaviour {
 	[Serializable]
 	public enum ButtonType
 	{
-		Cancel,
+		BuildBasicSpawner,
 		BuildBasicShooter,
-		BuildBasicSpawner
+		BuildRedShooter,
+		BuildBlueShooter,
+		DestroyTower
 	}
 
 	public void Setup(ButtonType type, RadialMenu menu, int position) {
@@ -37,7 +39,7 @@ public class RadialButton : MonoBehaviour {
 
 	Vector2 GetRadialPosition() {
 		Vector2 startingPosition = currentMenu.GetComponent<RectTransform> ().localPosition;
-		float angle = ((90f - (currentMenu.CurrentNumberOfButtons * 5f)) * currentPosition);
+		float angle = ((96f - (currentMenu.CurrentNumberOfButtons * 5f)) * currentPosition);
 		// offset
 		angle -= 80f;
 		startingPosition.x += Mathf.Sin (angle * Mathf.Deg2Rad) * BUTTON_RADIAL_DISTANCE;
@@ -50,7 +52,11 @@ public class RadialButton : MonoBehaviour {
 		case ButtonType.BuildBasicShooter:
 			return SpriteManager.Instance.BasicTower;
 		case ButtonType.BuildBasicSpawner:
-			return SpriteManager.Instance.BasicCrystal;
+			return SpriteManager.Instance.CrystalTower;
+		case ButtonType.BuildBlueShooter:
+			return SpriteManager.Instance.BlueTower;
+		case ButtonType.BuildRedShooter:
+			return SpriteManager.Instance.RedTower;
 			break;
 		}
 		return SpriteManager.Instance.Cancel;
@@ -102,5 +108,13 @@ public class RadialButton : MonoBehaviour {
 	public void Close() {
 		targetScale = 0f;
 		scaleAnimationSpeed = 10f;
+	}
+
+	public void PointerEnter() {
+		currentMenu.PointerEnteredButton (CurrentType);
+	}
+
+	public void PointerExit() {
+		currentMenu.PointerExitedButton (CurrentType);
 	}
 }

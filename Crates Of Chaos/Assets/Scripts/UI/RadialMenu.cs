@@ -7,6 +7,7 @@ public class RadialMenu : MonoBehaviour {
 	public GameObject RadialButtonPrefab;
 	public int CurrentNumberOfButtons;
 	public GameObject backgroundClickDetector;
+	public BuildingInfo buildingInfo;
 	List<RadialButton> createdButtons;
 	private static RadialMenu Instance;
 	private GameObject currentBuilding;
@@ -29,15 +30,19 @@ public class RadialMenu : MonoBehaviour {
 	}
 
 	void SetupForBasicTower() {
-		CurrentNumberOfButtons = 3;
+		CurrentNumberOfButtons = 5;
 		for(int i = 0; i < CurrentNumberOfButtons; i++) {
 			GameObject buttonObj = (GameObject)Instantiate (RadialButtonPrefab, transform.position, Quaternion.identity);
 			RadialButton button = buttonObj.GetComponent<RadialButton> ();
-			RadialButton.ButtonType type = RadialButton.ButtonType.Cancel;
+			RadialButton.ButtonType type = RadialButton.ButtonType.DestroyTower;
 			if (i == 0) {
-				type = RadialButton.ButtonType.BuildBasicShooter;
-			} else if (i == 1) {
 				type = RadialButton.ButtonType.BuildBasicSpawner;
+			} else if (i == 1) {
+				type = RadialButton.ButtonType.BuildBasicShooter;
+			} else if (i == 2) {
+				type = RadialButton.ButtonType.BuildBlueShooter;
+			} else if (i == 3) {
+				type = RadialButton.ButtonType.BuildRedShooter;
 			}
 			button.Setup (type, this, i);
 			buttonObj.transform.SetParent (transform);
@@ -83,5 +88,13 @@ public class RadialMenu : MonoBehaviour {
 
 	public void BackgroundPressed() {
 		CloseMenu ();
+	}
+
+	public void PointerEnteredButton(RadialButton.ButtonType buttonType) {
+		
+	}
+
+	public void PointerExitedButton(RadialButton.ButtonType buttonType) {
+		
 	}
 }
