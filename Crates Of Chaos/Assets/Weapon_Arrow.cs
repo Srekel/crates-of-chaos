@@ -52,10 +52,8 @@ public class Weapon_Arrow : Weapon {
 
 	public override void Upgrade(int strength)
 	{
-		time_between_shots = time_between_shots / (1 + strength * 0.2f);
-		base_projectile_speed = base_projectile_speed * (1 + strength * 0.05f);
-		projectile_modifier = projectile_modifier * (1 + strength * 0.05f);
-
-		// str = 10 ==> 1 -> 1.5 -> 2.25
+		time_between_shots = time_between_shots / (1 + strength * 0.02f);
+		base_projectile_speed = base_projectile_speed * (1 + strength * 0.02f);
+		projectile_modifier = projectile_modifier * (1 + strength * 0.02f);
 	}
 }
