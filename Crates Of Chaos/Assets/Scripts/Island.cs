@@ -7,9 +7,12 @@ public class Island : MonoBehaviour {
 	public ResourceSystem.ResourceType resource_type;
 
 	private List<GameObject> colliders = new List<GameObject>();
+	private Light light;
 
 	void Start()
 	{
+		light = gameObject.GetComponentInChildren<Light>();
+		light.enabled = false;
 		if (resource_type == ResourceSystem.ResourceType.Basic)
 		{
 			
@@ -37,6 +40,8 @@ public class Island : MonoBehaviour {
 					rb.isKinematic = true;
 				}
 			}
+
+			light.transform.position = child.transform.position + new Vector3(0, 0, -3);
 		}
 	}
 
@@ -55,15 +60,35 @@ public class Island : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D collision)
+	void OnTriggerEnter2D(Collider2D collider)
 	{
+		if (collider.gameObject.layer != LayerMask.NameToLayer("PlayerObject"))
+		{
+			return;
+		}
+
 		ResourceSystem.instance.AddResourceType(resource_type);
-		colliders.Add(collision.gameObject);
+		colliders.Add(collider.gameObject);
+
+		if (resource_type != ResourceSystem.ResourceType.Basic)
+		{
+			light.enabled = true;
+		}
 	}
 
-	void OnTriggerExit2D(Collider2D collision)
+	void OnTriggerExit2D(Collider2D collider)
 	{
+		if (collider.gameObject.layer != LayerMask.NameToLayer("PlayerObject"))
+		{
+			return;
+		}
+
 		ResourceSystem.instance.RemoveResourceType(resource_type);
-		colliders.Remove(collision.gameObject); // uugh
+		colliders.Remove(collider.gameObject); // uugh
+
+		if (!ResourceSystem.instance.IsResourceTypeAvailable(resource_type))
+		{
+			light.enabled = false;
+		}
 	}
 }
