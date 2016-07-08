@@ -8,6 +8,7 @@ public class RadialButton : MonoBehaviour {
 	public Image ButtonSprite;
 	public ButtonType CurrentType;
 	private RadialMenu currentMenu;
+	private BuildingInfo currentBuildingInfo;
 	private int currentPosition;
 	private RectTransform rectTransform;
 
@@ -15,6 +16,10 @@ public class RadialButton : MonoBehaviour {
 	private float targetScale;
 	private float scaleAnimationSpeed;
 	private bool interactionEnabled = true;
+	private bool mouseHovering;
+	private int intPower;
+	private int basicCost;
+	private int redCost;
 
 	[Serializable]
 	public enum ButtonType
@@ -28,11 +33,15 @@ public class RadialButton : MonoBehaviour {
 	public void Setup(ButtonType type, RadialMenu menu, int position) {
 		CurrentType = type;
 		currentMenu = menu;
+		currentBuildingInfo = currentMenu.buildingInfo;
 		currentPosition = position;
 		ButtonSprite.sprite = GetSprite ();
 		rectTransform = GetComponent<RectTransform> ();
 		// TODO: Animate this.
 		rectTransform.position = GetRadialPosition ();
+		if (type == ButtonType.BuildBasicSpawner) {
+			basicCost = 2;
+		}
 
 	}
 
@@ -59,6 +68,22 @@ public class RadialButton : MonoBehaviour {
 		return SpriteManager.Instance.Cancel;
 	}
 
+	void UpdateStrenthAndCost() {
+		int strength = Mathf.FloorToInt (currentPower);
+		currentBuildingInfo.strengthLabel.text = "Strength: " + strength.ToString ();
+		basicCost = strength;
+		if(CurrentType == ButtonType.BuildRedShooter) {
+			redCost = 1 + strength;
+			currentBuildingInfo.textCost2.text = redCost.ToString ();
+		}
+		currentBuildingInfo.textCost1.text = basicCost.ToString ();
+
+		if (Input.GetMouseButton(0) 
+			&& (basicCost >= ResourceSystem.instance.GetResources (ResourceSystem.ResourceType.Basic) 
+				|| redCost >= ResourceSystem.instance.GetResources (ResourceSystem.ResourceType.Red)))
+			Clicked ();
+	}
+
 	// Use this for initialization
 	void Start () {
 		transform.localScale = new Vector3(.1f, .1f, 1f);
@@ -71,12 +96,27 @@ public class RadialButton : MonoBehaviour {
 		if (currentMenu != null) {
 			rectTransform.position = GetRadialPosition ();
 			// TODO: Make not terrible
+			if(interactionEnabled && (CurrentType == ButtonType.BuildBasicShooter || CurrentType == ButtonType.BuildRedShooter)) {
+				if (Input.GetMouseButton (0) && mouseHovering) {
+					if (currentPower < 2f) {
+						currentPower += Time.deltaTime;
+					} else if (currentPower < 5f) {
+						currentPower += Time.deltaTime * 4f;
+					} else if (currentPower < 10f) {
+						currentPower += Time.deltaTime * 10f;
+					} else {
+						currentPower += Time.deltaTime * 25f;
+					}
+					targetScale = Mathf.Sqrt (currentPower);
+					if (targetScale > 2.5f)
+						targetScale = 2.5f;
+					UpdateStrenthAndCost ();
+				} else {
+					currentPower = 1f;
+				}
 
-			if (Input.GetMouseButton (0)) {
-				currentPower += Time.deltaTime * .5f;
-			} else {
-				currentPower = 1f;
 			}
+
 
 
 			Vector3 scale = transform.localScale;
@@ -101,20 +141,36 @@ public class RadialButton : MonoBehaviour {
 
 
 	public void Clicked() {
-		//if(interactionEnabled)
-			currentMenu.ButtonPressed (CurrentType, currentPower);
+		if (interactionEnabled) {
+			if(basicCost <= ResourceSystem.instance.GetResources (ResourceSystem.ResourceType.Basic) 
+				&& redCost <= ResourceSystem.instance.GetResources (ResourceSystem.ResourceType.Red)) {
+				ResourceSystem.instance.RemoveResources (ResourceSystem.ResourceType.Basic, basicCost);
+				ResourceSystem.instance.RemoveResources (ResourceSystem.ResourceType.Red, redCost);
+				currentMenu.ButtonPressed (CurrentType, Mathf.FloorToInt (currentPower));
+			}
+
+		}
 	}
 
 	public void Close() {
 		targetScale = 0f;
 		scaleAnimationSpeed = 10f;
+		interactionEnabled = false;
 	}
 
 	public void PointerEnter() {
 		currentMenu.PointerEnteredButton (CurrentType);
+		if(CurrentType == ButtonType.BuildBasicShooter || CurrentType == ButtonType.BuildRedShooter)
+			UpdateStrenthAndCost ();
+		mouseHovering = true;
 	}
 
 	public void PointerExit() {
+		mouseHovering = false;
 		currentMenu.PointerExitedButton (CurrentType);
+		if (interactionEnabled) {
+			targetScale = 1;
+			transform.localScale = Vector3.one;
+		}
 	}
 }

@@ -73,7 +73,7 @@ public class RadialMenu : MonoBehaviour {
 	}
 
 
-	public void ButtonPressed(RadialButton.ButtonType buttonType, float power) {
+	public void ButtonPressed(RadialButton.ButtonType buttonType, int power) {
 		
 		if (buttonType == RadialButton.ButtonType.DestroyTower) {
 			Destroy (currentBuilding);
@@ -88,6 +88,9 @@ public class RadialMenu : MonoBehaviour {
 			Vector3 buildingPos = currentBuilding.transform.position;
 			Destroy (currentBuilding);
 			GameObject createdTower = (GameObject)Instantiate (prefab, buildingPos, Quaternion.identity);
+			Upgradable up = createdTower.GetComponentInChildren<Upgradable> ();
+			if(up != null)
+				up.strength = power;
 		}
 
 		CloseMenu ();

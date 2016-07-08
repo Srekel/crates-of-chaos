@@ -11,6 +11,7 @@ public class BuildingInfo : MonoBehaviour {
 	public Text instructions;
 	public Animator animator;
 	public Text costLabel;
+	public Text strengthLabel;
 	private int basicCost;
 	private int redCost;
 	private int blueCost;
@@ -21,6 +22,7 @@ public class BuildingInfo : MonoBehaviour {
 	public void Setup(RadialButton.ButtonType buttonType) {
 		currentType = buttonType;
 		costLabel.text = "Cost: ";
+		strengthLabel.text = "";
 		redCost = blueCost = 0;
 		basicCost = 1;
 		imageCost1.gameObject.SetActive (true);
@@ -70,5 +72,6 @@ public class BuildingInfo : MonoBehaviour {
 		imageCost2.gameObject.SetActive(false);
 		towerName.text = "";
 		costLabel.text = "";
+		strengthLabel.text = "";
 	}
 }

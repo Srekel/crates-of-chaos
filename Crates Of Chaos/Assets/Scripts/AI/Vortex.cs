@@ -68,12 +68,22 @@ public class Vortex : MonoBehaviour {
 				}
 
 				to_spawn--;
-				to_spawn = 0; // temp todo
+				//to_spawn = 0; // temp todo
 				if (to_spawn == 0)
 				{
-					state = "waiting";
-					state_after_wait = "closing";
-					time_to_next = Time.time + 1;
+					if (level == levels)
+					{
+						state = "waiting";
+						state_after_wait = "dying";
+						time_to_next = Time.time + 1;
+
+					}
+					else
+					{
+						state = "waiting";
+						state_after_wait = "closing";
+						time_to_next = Time.time + 1;
+					}
 				}
 				else
 				{
@@ -92,6 +102,18 @@ public class Vortex : MonoBehaviour {
 				state = "waiting";
 				state_after_wait = "opening";
 				time_to_next = Time.time + time_between_levels;
+			}
+		}
+
+		if (state == "dying")
+		{
+			var dt = Time.deltaTime;
+			transform.localScale -= new Vector3(dt, dt, dt) * 1;
+			transform.Rotate(new Vector3(0, 0, Time.deltaTime * 360));
+			if (transform.localScale.x <= 0.1f)
+			{
+				transform.localScale = new Vector3(1, 1, 1) * 0.1f;
+				state = "dead";
 			}
 		}
 	}
