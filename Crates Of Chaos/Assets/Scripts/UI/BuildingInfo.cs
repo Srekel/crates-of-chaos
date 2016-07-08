@@ -27,7 +27,7 @@ public class BuildingInfo : MonoBehaviour {
 		imageCost2.gameObject.SetActive (buttonType != RadialButton.ButtonType.BuildBasicShooter);
 		if (buttonType == RadialButton.ButtonType.BuildBasicShooter) {
 			imageCost2.gameObject.SetActive (false);
-		} else if (buttonType == RadialButton.ButtonType.BuildBlueShooter) {
+		} else if (buttonType == RadialButton.ButtonType.BuildRedShooter) {
 			
 		}
 

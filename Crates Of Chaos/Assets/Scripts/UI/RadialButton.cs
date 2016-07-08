@@ -22,7 +22,6 @@ public class RadialButton : MonoBehaviour {
 		BuildBasicSpawner,
 		BuildBasicShooter,
 		BuildRedShooter,
-		BuildBlueShooter,
 		DestroyTower
 	}
 
@@ -39,9 +38,9 @@ public class RadialButton : MonoBehaviour {
 
 	Vector2 GetRadialPosition() {
 		Vector2 startingPosition = currentMenu.GetComponent<RectTransform> ().localPosition;
-		float angle = ((96f - (currentMenu.CurrentNumberOfButtons * 5f)) * currentPosition);
+		float angle = ((70f - (currentMenu.CurrentNumberOfButtons * 5f)) * currentPosition);
 		// offset
-		angle -= 80f;
+		angle -= 70f;
 		startingPosition.x += Mathf.Sin (angle * Mathf.Deg2Rad) * BUTTON_RADIAL_DISTANCE;
 		startingPosition.y += Mathf.Cos (angle * Mathf.Deg2Rad) * BUTTON_RADIAL_DISTANCE;
 		return startingPosition;
@@ -53,8 +52,6 @@ public class RadialButton : MonoBehaviour {
 			return SpriteManager.Instance.BasicTower;
 		case ButtonType.BuildBasicSpawner:
 			return SpriteManager.Instance.CrystalTower;
-		case ButtonType.BuildBlueShooter:
-			return SpriteManager.Instance.BlueTower;
 		case ButtonType.BuildRedShooter:
 			return SpriteManager.Instance.RedTower;
 			break;
@@ -71,32 +68,35 @@ public class RadialButton : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		rectTransform.position = GetRadialPosition ();
-		// TODO: Make not terrible
+		if (currentMenu != null) {
+			rectTransform.position = GetRadialPosition ();
+			// TODO: Make not terrible
 
-		if (Input.GetMouseButton (0)) {
-			currentPower += Time.deltaTime * .5f;
-		} else {
-			currentPower = 1f;
+			if (Input.GetMouseButton (0)) {
+				currentPower += Time.deltaTime * .5f;
+			} else {
+				currentPower = 1f;
+			}
+
+
+			Vector3 scale = transform.localScale;
+			if (scale.x < targetScale) {
+				scale.x += Time.deltaTime * scaleAnimationSpeed;
+				if (scale.x > targetScale)
+					scale.x = targetScale;
+				scale.y = scale.x;
+				transform.localScale = scale;
+			} else if (scale.x > targetScale) {
+				scale.x -= Time.deltaTime * scaleAnimationSpeed;
+				if (scale.x < targetScale)
+					scale.x = targetScale;
+				scale.y = scale.x;
+				transform.localScale = scale;
+				if (scale.x == 0)
+					Destroy (gameObject);
+			}
 		}
 
-
-		Vector3 scale = transform.localScale;
-		if (scale.x < targetScale) {
-			scale.x += Time.deltaTime * scaleAnimationSpeed;
-			if (scale.x > targetScale)
-				scale.x = targetScale;
-			scale.y = scale.x;
-			transform.localScale = scale;
-		} else if (scale.x > targetScale) {
-			scale.x -= Time.deltaTime * scaleAnimationSpeed;
-			if (scale.x < targetScale)
-				scale.x = targetScale;
-			scale.y = scale.x;
-			transform.localScale = scale;
-			if (scale.x == 0)
-				Destroy (gameObject);
-		}
 	}
 
 

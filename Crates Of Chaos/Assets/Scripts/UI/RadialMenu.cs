@@ -30,7 +30,7 @@ public class RadialMenu : MonoBehaviour {
 	}
 
 	void SetupForBasicTower() {
-		CurrentNumberOfButtons = 5;
+		CurrentNumberOfButtons = 4;
 		for(int i = 0; i < CurrentNumberOfButtons; i++) {
 			GameObject buttonObj = (GameObject)Instantiate (RadialButtonPrefab, transform.position, Quaternion.identity);
 			RadialButton button = buttonObj.GetComponent<RadialButton> ();
@@ -40,8 +40,6 @@ public class RadialMenu : MonoBehaviour {
 			} else if (i == 1) {
 				type = RadialButton.ButtonType.BuildBasicShooter;
 			} else if (i == 2) {
-				type = RadialButton.ButtonType.BuildBlueShooter;
-			} else if (i == 3) {
 				type = RadialButton.ButtonType.BuildRedShooter;
 			}
 			button.Setup (type, this, i);
