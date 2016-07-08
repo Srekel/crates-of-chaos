@@ -47,9 +47,9 @@ public class Spawner_Headquarters : Spawner
 		var prefab = to_spawn[current_spawn_index];
 		current_spawn_index++;
 
-		var rotated_object_transform = transform;
-		var rotation = rotated_object_transform.rotation;
-		var position = rotated_object_transform.position + rotated_object_transform.up * 2;
+		//var rotation = rotated_object_transform.rotation;
+		var rotation = transform.rotation;
+		var position = transform.position + transform.up * 5;
 
 		var spawned_object = (Spawnable)Instantiate(prefab, position, rotation);
 
@@ -61,8 +61,8 @@ public class Spawner_Headquarters : Spawner
 		var rotation_sin = Mathf.Sin(angle_radians);
 		var rotation_cos = Mathf.Cos(angle_radians);
 
-		var wx = rotated_object_transform.up.x;
-		var wy = rotated_object_transform.up.y;
+		var wx = transform.up.x;
+		var wy = transform.up.y;
 		var weapon_direction = new Vector2(wx, wy);
 		weapon_direction.x = (rotation_cos * wx) - (rotation_sin * wy);
 		weapon_direction.y = (rotation_sin * wx) + (rotation_cos * wy);

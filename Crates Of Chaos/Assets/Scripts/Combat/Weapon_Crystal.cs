@@ -43,7 +43,7 @@ public class Weapon_Crystal : Weapon
 			{
 				damage_buildup = 0;
 
-				Debug.DrawLine(linerenderer.transform.position - new Vector3(5, 0, 0), linerenderer.transform.position + new Vector3(5, 0, 0));
+				//Debug.DrawLine(linerenderer.transform.position - new Vector3(5, 0, 0), linerenderer.transform.position + new Vector3(5, 0, 0));
 				//renderer.enabled = false;
 				scale = Mathf.Max(0, scale - Time.deltaTime);
 			}
