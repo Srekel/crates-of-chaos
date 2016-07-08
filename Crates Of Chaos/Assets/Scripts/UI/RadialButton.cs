@@ -35,12 +35,13 @@ public class RadialButton : MonoBehaviour {
 
 	}
 
-	// Lazy for now, will do geometry later
 	Vector2 GetRadialPosition() {
 		Vector2 startingPosition = currentMenu.GetComponent<RectTransform> ().localPosition;
-		startingPosition.y += BUTTON_RADIAL_DISTANCE;
-		startingPosition.x -= (float)(currentMenu.CurrentNumberOfButtons - 1) / 2f * BUTTON_RADIAL_DISTANCE;
-		startingPosition.x += currentPosition * BUTTON_RADIAL_DISTANCE;
+		float angle = ((90f - (currentMenu.CurrentNumberOfButtons * 5f)) * currentPosition);
+		// offset
+		angle -= 80f;
+		startingPosition.x += Mathf.Sin (angle * Mathf.Deg2Rad) * BUTTON_RADIAL_DISTANCE;
+		startingPosition.y += Mathf.Cos (angle * Mathf.Deg2Rad) * BUTTON_RADIAL_DISTANCE;
 		return startingPosition;
 	}
 
@@ -64,7 +65,7 @@ public class RadialButton : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		rectTransform.position = GetRadialPosition ();
 		// TODO: Make not terrible
 
 		if (Input.GetMouseButton (0)) {

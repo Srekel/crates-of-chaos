@@ -10,6 +10,7 @@ public class RadialMenu : MonoBehaviour {
 	List<RadialButton> createdButtons;
 	private static RadialMenu Instance;
 	private GameObject currentBuilding;
+	private bool menuActive;
 	private RectTransform rectTransform;
 
 	public static void BuildingClicked(GameObject building) {
@@ -18,10 +19,12 @@ public class RadialMenu : MonoBehaviour {
 
 	void SetupMenu(GameObject building) {
 		currentBuilding = building;
-		Vector2 buildingPosition = Camera.main.WorldToScreenPoint (building.transform.position);
-		rectTransform.localPosition = buildingPosition;
+
 		SetupForBasicTower ();
+		UpdatePosition ();
+
 		backgroundClickDetector.SetActive (true);
+		menuActive = true;
 		Time.timeScale = .25f;
 	}
 
@@ -37,7 +40,7 @@ public class RadialMenu : MonoBehaviour {
 				type = RadialButton.ButtonType.BuildBasicSpawner;
 			}
 			button.Setup (type, this, i);
-			buttonObj.transform.SetParent (transform.parent);
+			buttonObj.transform.SetParent (transform);
 			createdButtons.Add (button);
 		}
 	}
@@ -49,23 +52,36 @@ public class RadialMenu : MonoBehaviour {
 	}
 	
 	void Update () {
-	
+		if (currentBuilding != null) {
+			UpdatePosition ();
+		} else if (menuActive) {
+			// The building got destroyed
+			CloseMenu();
+		}
 	}
+
+	void UpdatePosition() {
+		Vector2 buildingPosition = Camera.main.WorldToScreenPoint (currentBuilding.transform.position);
+		rectTransform.localPosition = buildingPosition;
+	}
+
 
 	public void ButtonPressed(RadialButton.ButtonType buttonType, float power) {
-		CloseButtons ();
+		CloseMenu ();
 	}
 
-	void CloseButtons() {
+	void CloseMenu() {
 		foreach(RadialButton b in createdButtons) {
 			b.Close ();
 		}
 		createdButtons.Clear ();
 		backgroundClickDetector.SetActive (false);
+		menuActive = false;
+		currentBuilding = null;
 		Time.timeScale = 1f;
 	}
 
 	public void BackgroundPressed() {
-		CloseButtons ();
+		CloseMenu ();
 	}
 }

@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class ResourceSystem : MonoBehaviour {
+	public Text[] ResourceDisplayers;
 
 	public enum ResourceType
 	{
@@ -49,10 +51,12 @@ public class ResourceSystem : MonoBehaviour {
 	public void AddResources(ResourceType resource, int count)
 	{
 		resources[resource] += count;
+		ResourceDisplayers [(int)resource].text = resources [resource].ToString();
 	}
 
 	public void RemoveResources(ResourceType resource, int count)
 	{
 		resources[resource] -= count;
+		ResourceDisplayers [(int)resource].text = resources [resource].ToString();
 	}
 }
