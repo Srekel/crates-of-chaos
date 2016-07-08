@@ -30,7 +30,7 @@ public class InputManager : MonoBehaviour {
             if(CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame || CurrentMouseStatus == MouseStatus.RightMouseDownFirstFrame) {
                 Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 				LayerMask layerMask = CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame ? LeftClickRaycastLayer : RightClickRaycastLayer;
-				float sphereRadius = CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame ? 0.6f : 2f;
+				float sphereRadius = CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame ? 0.5f : 2f;
 				if (Physics.SphereCast(ray, sphereRadius, out lastHit, 1000f, layerMask))
                 {
                     if (CurrentMouseStatus == MouseStatus.LeftMouseDownFirstFrame)
