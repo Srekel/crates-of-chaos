@@ -110,6 +110,8 @@ public class InputManager : MonoBehaviour {
     }
 
     public void CrateSelected(GameObject crate) {
-        Destroy(crate);
+		var crystal_type = crate.GetComponent<Crystal>().CrystalType;
+		ResourceSystem.instance.AddResources(crystal_type, 1);
+		Destroy(crate);
     }
 }
