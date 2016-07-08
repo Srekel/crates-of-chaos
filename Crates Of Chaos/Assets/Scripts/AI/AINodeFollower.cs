@@ -40,7 +40,7 @@ public class AINodeFollower : MonoBehaviour {
 		rigid_body.AddForce(-Physics2D.gravity);
 		rigid_body.AddForce(-rigid_body.velocity * 0.5f);
 
-		//Debug.DrawLine(transform.position, current_node.transform.position);
+		Debug.DrawLine(transform.position, current_node.transform.position);
 	}
 
 	void Update()
