@@ -8,6 +8,9 @@ public class RadialMenu : MonoBehaviour {
 	public int CurrentNumberOfButtons;
 	public GameObject backgroundClickDetector;
 	public BuildingInfo buildingInfo;
+	public GameObject BasicTowerPrefab;
+	public GameObject AdvancedTowerPrefab;
+	public GameObject CrystalGeneratorPrefab;
 	List<RadialButton> createdButtons;
 	private static RadialMenu Instance;
 	private GameObject currentBuilding;
@@ -23,8 +26,9 @@ public class RadialMenu : MonoBehaviour {
 
 		SetupForBasicTower ();
 		UpdatePosition ();
-
+		buildingInfo.gameObject.SetActive (true);
 		backgroundClickDetector.SetActive (true);
+		buildingInfo.Deactivate ();
 		menuActive = true;
 		Time.timeScale = .25f;
 	}
@@ -70,6 +74,22 @@ public class RadialMenu : MonoBehaviour {
 
 
 	public void ButtonPressed(RadialButton.ButtonType buttonType, float power) {
+		
+		if (buttonType == RadialButton.ButtonType.DestroyTower) {
+			Destroy (currentBuilding);
+		} else {
+			GameObject prefab;
+			if (buttonType == RadialButton.ButtonType.BuildBasicShooter)
+				prefab = BasicTowerPrefab;
+			else if(buttonType == RadialButton.ButtonType.BuildRedShooter)
+				prefab = AdvancedTowerPrefab;
+			else
+				prefab = CrystalGeneratorPrefab;
+			Vector3 buildingPos = currentBuilding.transform.position;
+			Destroy (currentBuilding);
+			GameObject createdTower = (GameObject)Instantiate (prefab, buildingPos, Quaternion.identity);
+		}
+
 		CloseMenu ();
 	}
 
@@ -81,6 +101,7 @@ public class RadialMenu : MonoBehaviour {
 		backgroundClickDetector.SetActive (false);
 		menuActive = false;
 		currentBuilding = null;
+		buildingInfo.gameObject.SetActive (false);
 		Time.timeScale = 1f;
 	}
 
@@ -90,9 +111,10 @@ public class RadialMenu : MonoBehaviour {
 
 	public void PointerEnteredButton(RadialButton.ButtonType buttonType) {
 		
+		buildingInfo.Setup (buttonType);
 	}
 
 	public void PointerExitedButton(RadialButton.ButtonType buttonType) {
-		
+		buildingInfo.Deactivate ();
 	}
 }

@@ -10,7 +10,7 @@ public class BuildingInfo : MonoBehaviour {
 	public Text towerName;
 	public Text instructions;
 	public Animator animator;
-
+	public Text costLabel;
 	private int basicCost;
 	private int redCost;
 	private int blueCost;
@@ -20,18 +20,33 @@ public class BuildingInfo : MonoBehaviour {
 
 	public void Setup(RadialButton.ButtonType buttonType) {
 		currentType = buttonType;
-		animator.Play ("BuildingInfoActivate");
-
+		costLabel.text = "Cost: ";
 		redCost = blueCost = 0;
 		basicCost = 1;
+		imageCost1.gameObject.SetActive (true);
 		imageCost2.gameObject.SetActive (buttonType != RadialButton.ButtonType.BuildBasicShooter);
 		if (buttonType == RadialButton.ButtonType.BuildBasicShooter) {
-			imageCost2.gameObject.SetActive (false);
+			towerName.text = "Attack Tower";
 		} else if (buttonType == RadialButton.ButtonType.BuildRedShooter) {
-			
+			towerName.text = "Advanced Attack Tower";
+			redCost = 1;
+		} else if(buttonType == RadialButton.ButtonType.BuildBasicSpawner) {
+			towerName.text = "Crystal Spawner";
+			imageCost2.gameObject.SetActive (false);
+			basicCost = 2;
+		} else if(buttonType == RadialButton.ButtonType.DestroyTower) {
+			towerName.text = "Destroy Tower";
+			basicCost = 0;
+			costLabel.text = "";
+			imageCost1.gameObject.SetActive (false);
+			imageCost2.gameObject.SetActive (false);
 		}
 
-		textCost1.text = basicCost.ToString();
+		if (basicCost > 0)
+			textCost1.text = basicCost.ToString ();
+		else
+			textCost1.text = "";
+
 		if (redCost > 0)
 			textCost2.text = redCost.ToString ();
 		else if (blueCost > 0)
@@ -49,6 +64,11 @@ public class BuildingInfo : MonoBehaviour {
 	}
 
 	public void Deactivate() {
-		
+		textCost1.text = "";
+		textCost2.text = "";
+		imageCost1.gameObject.SetActive (false);
+		imageCost2.gameObject.SetActive(false);
+		towerName.text = "";
+		costLabel.text = "";
 	}
 }
