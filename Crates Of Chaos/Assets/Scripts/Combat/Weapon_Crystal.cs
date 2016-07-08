@@ -3,28 +3,33 @@ using System.Collections;
 
 public class Weapon_Crystal : Weapon
 {
-	public float base_projectile_speed = 1;
-	
+	public float base_damage = 10;
+
 	private Targeter targeter;
-	private new LineRenderer renderer;
+	private LineRenderer linerenderer;
+	private SpriteRenderer spriterenderer;
 	private float scale = 0;
+	private float damage_buildup = 0;
+	private float damage_mod = 1;
 	
 	void Start()
 	{
 		targeter = gameObject.GetComponentInChildren<Targeter>();
-		renderer = gameObject.GetComponentInChildren<LineRenderer>();
+		linerenderer = gameObject.GetComponentInChildren<LineRenderer>();
+		spriterenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 	}
 	
 	void Update()
 	{
 		if (targeter.current_target == null)
 		{
+			damage_buildup = 0;
 			scale = Mathf.Max(0, scale - Time.deltaTime);
 		}
 		else
 		{
-			var direction = (targeter.current_target.transform.position - renderer.transform.position).normalized;
-			var raystart = new Vector2(renderer.transform.position.x + direction.x * 2, renderer.transform.position.y + direction.y * 2);
+			var direction = (targeter.current_target.transform.position - linerenderer.transform.position).normalized;
+			var raystart = new Vector2(linerenderer.transform.position.x + direction.x * 2, linerenderer.transform.position.y + direction.y * 2);
 			var raydir = new Vector2(direction.x, direction.y);
 			var mask = (1 << LayerMask.NameToLayer("EnemyObject")) | (1 << LayerMask.NameToLayer("Default"));
 			RaycastHit2D hit = Physics2D.Raycast(
@@ -36,19 +41,37 @@ public class Weapon_Crystal : Weapon
 
 			if (hit.collider == null)
 			{
-				Debug.DrawLine(renderer.transform.position - new Vector3(5, 0, 0), renderer.transform.position + new Vector3(5, 0, 0));
+				damage_buildup = 0;
+
+				Debug.DrawLine(linerenderer.transform.position - new Vector3(5, 0, 0), linerenderer.transform.position + new Vector3(5, 0, 0));
 				//renderer.enabled = false;
 				scale = Mathf.Max(0, scale - Time.deltaTime);
 			}
 			else
 			{
-				renderer.enabled = true;
+				linerenderer.enabled = true;
 
-				renderer.SetPosition(0, renderer.transform.position);
-				renderer.SetPosition(1, hit.collider.transform.position);
-				renderer.material.mainTextureOffset = new Vector2(renderer.material.mainTextureOffset.x - Time.deltaTime, 0);
+				linerenderer.SetPosition(0, linerenderer.transform.position);
+				linerenderer.SetPosition(1, hit.collider.transform.position);
+				linerenderer.material.mainTextureOffset = new Vector2(linerenderer.material.mainTextureOffset.x - Time.deltaTime, 0);
 
+				spriterenderer.transform.position = hit.collider.transform.position;
 				scale = Mathf.Min(1, scale + Time.deltaTime);
+				
+				var health = hit.collider.GetComponent<Health>();
+				if (health == null)
+				{
+					damage_buildup = 0;
+				}
+				else
+				{
+					damage_buildup += base_damage * damage_mod * scale * Time.deltaTime;
+					if (damage_buildup > 10)
+					{
+						health.TakeDamage((int)damage_buildup);
+						damage_buildup -= (int)damage_buildup;
+					}
+				}
 			}
 		}
 
@@ -60,11 +83,12 @@ public class Weapon_Crystal : Weapon
 
 		//		Debug.DrawLine(renderer.transform.position - new Vector3(0, 5, 0), renderer.transform.position + new Vector3(0, 5, 0));
 
-		renderer.SetWidth(scale, scale);
+		linerenderer.SetWidth(scale, scale);
+		spriterenderer.transform.localScale = new Vector3(scale, scale, scale);
 	}
 
 	public override void Upgrade(int strength)
 	{
-		base_projectile_speed = base_projectile_speed * (1 + strength * 0.05f);
+		damage_mod = damage_mod * (1 + strength * 0.05f);
 	}
 }
