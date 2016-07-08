@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Spawner_Headquarters : Spawner
+public class Spawner_CrystalFactory : Spawner
 {
 	public float spawn_time = 2;
 	public float time_between_resources = 0.2f;
@@ -16,8 +16,11 @@ public class Spawner_Headquarters : Spawner
 
 	private List<Spawnable> to_spawn = new List<Spawnable>();
 	private int current_spawn_index = 0;
+	private ResourceSystem.ResourceType resource;
+	private int num_red = 0;
 
-	void Start () {
+	void Start()
+	{
 		SpawnerSystem.instance.AddSpawner(this, spawn_time);
 	}
 
@@ -32,14 +35,16 @@ public class Spawner_Headquarters : Spawner
 		{
 			current_spawn_index = 0;
 			to_spawn.Clear();
-			to_spawn.Add(basic_resource_prefab);
-			if (ResourceSystem.instance.IsResourceTypeAvailable(ResourceSystem.ResourceType.Blue))
+			if (num_red == 0)
 			{
-				to_spawn.Add(blue_resource_prefab);
+				to_spawn.Add(basic_resource_prefab);
+				to_spawn.Add(basic_resource_prefab);
+				to_spawn.Add(basic_resource_prefab);
 			}
-
-			if (ResourceSystem.instance.IsResourceTypeAvailable(ResourceSystem.ResourceType.Red))
+			else
 			{
+				to_spawn.Add(red_resource_prefab);
+				to_spawn.Add(red_resource_prefab);
 				to_spawn.Add(red_resource_prefab);
 			}
 		}
@@ -83,12 +88,22 @@ public class Spawner_Headquarters : Spawner
 		{
 			time_until_next_spawn = time_between_resources;
 		}
-		
+
 		return spawned_object.gameObject;
 	}
 
-	public void Land()
+	public void EnterRed()
 	{
-		//gameObject.GetComponent<ParticleSystem>().Play();
+		num_red++;
+		resource = ResourceSystem.ResourceType.Basic;
+	}
+
+	public void ExitRed()
+	{
+		num_red--;
+		if (num_red == 0)
+		{
+			resource = ResourceSystem.ResourceType.Basic;
+		}
 	}
 }

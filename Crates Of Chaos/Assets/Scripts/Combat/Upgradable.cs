@@ -19,7 +19,7 @@ public class Upgradable : MonoBehaviour {
 		needed_for_next_level = strength;
 		modifier = 1 + (level - 1) * strength * 0.5f;
 
-		health_component = gameObject.GetComponent<Health>();
+		health_component = gameObject.transform.parent.GetComponent<Health>();
 		health_component.max_health = (int)(health_component.base_health * modifier);
 		health_component.current_health = health_component.max_health;
 

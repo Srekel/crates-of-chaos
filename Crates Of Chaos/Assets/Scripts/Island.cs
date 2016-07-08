@@ -67,6 +67,21 @@ public class Island : MonoBehaviour {
 			return;
 		}
 
+		if (resource_type == ResourceSystem.ResourceType.Red)
+		{
+			var factory = collider.gameObject.GetComponent<Spawner_CrystalFactory>();
+			if (factory != null)
+			{
+				factory.EnterRed();
+			}
+		}
+
+		var hq = collider.gameObject.GetComponent<Spawner_Headquarters>();
+		if (hq)
+		{
+			hq.Land();
+		}
+
 		ResourceSystem.instance.AddResourceType(resource_type);
 		colliders.Add(collider.gameObject);
 
@@ -81,6 +96,15 @@ public class Island : MonoBehaviour {
 		if (collider.gameObject.layer != LayerMask.NameToLayer("PlayerObject"))
 		{
 			return;
+		}
+
+		if (resource_type == ResourceSystem.ResourceType.Red)
+		{
+			var factory = collider.gameObject.GetComponent<Spawner_CrystalFactory>();
+			if (factory != null)
+			{
+				factory.ExitRed();
+			}
 		}
 
 		ResourceSystem.instance.RemoveResourceType(resource_type);
