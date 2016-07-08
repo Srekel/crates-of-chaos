@@ -34,7 +34,7 @@ public class TargetSystem : MonoBehaviour {
 			var targeter = targeters[i];
 			var to_target = targeter.current_target.transform.position - targeter.object_to_rotate.transform.position;
 			var wanted_direction = to_target.normalized;
-			var direction = Vector3.Lerp(targeter.object_to_rotate.transform.forward, wanted_direction, 0.1f);
+			var direction = Vector3.Lerp(targeter.object_to_rotate.transform.forward, wanted_direction, 1f);
 			direction = direction.normalized;
 
 			// todo make this better

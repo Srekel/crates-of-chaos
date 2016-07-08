@@ -10,8 +10,9 @@ public class Upgradable : MonoBehaviour {
 	public float modifier = 1;
 
 	private Health health_component;
-	private Spawner_Weapon weapon_component;
+	private Spawner_Weapon spawner_component;
 	private Tower_Layered tower_component;
+	private Weapon weapon_component;
 
 	// Use this for initialization
 	void Start () {
@@ -22,12 +23,13 @@ public class Upgradable : MonoBehaviour {
 		health_component.max_health = (int)(health_component.base_health * modifier);
 		health_component.current_health = health_component.max_health;
 
-		weapon_component = gameObject.GetComponent<Spawner_Weapon>();
-		weapon_component.ammo_modified = (int)(weapon_component.ammo_modified * modifier);
-		weapon_component.time_to_reload_modified = weapon_component.time_to_reload_modified / modifier;
-		weapon_component.time_between_shots_modified = weapon_component.time_between_shots_modified / modifier;
+		spawner_component = gameObject.GetComponent<Spawner_Weapon>();
+		spawner_component.ammo_modified = (int)(spawner_component.ammo_modified * modifier);
+		spawner_component.time_to_reload_modified = spawner_component.time_to_reload_modified / modifier;
+		spawner_component.time_between_shots_modified = spawner_component.time_between_shots_modified / modifier;
 
 		tower_component = gameObject.transform.parent.gameObject.GetComponent<Tower_Layered>();
+
 
 		gameObject.transform.parent.GetComponentInChildren<CrateCollector>().collected += Crystal_collected;
 	}
@@ -45,11 +47,14 @@ public class Upgradable : MonoBehaviour {
 			health_component.max_health = (int)(health_component.base_health * modifier);
 			health_component.current_health = (int)(health_component.max_health * health_ratio);
 
-			weapon_component.ammo_modified = (int)(weapon_component.ammo_modified * modifier);
-			weapon_component.time_to_reload_modified = weapon_component.time_to_reload_modified / modifier;
-			weapon_component.time_between_shots_modified = weapon_component.time_between_shots_modified / modifier;
+			spawner_component.ammo_modified = (int)(spawner_component.ammo_modified * modifier);
+			spawner_component.time_to_reload_modified = spawner_component.time_to_reload_modified / modifier;
+			spawner_component.time_between_shots_modified = spawner_component.time_between_shots_modified / modifier;
 
 			tower_component.Upgrade();
+
+			weapon_component = tower_component.weapon_go.GetComponent<Weapon>();
+			weapon_component.Upgrade(strength);
 
 			if (level == 3)
 			{
