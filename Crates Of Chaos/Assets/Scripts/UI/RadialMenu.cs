@@ -24,7 +24,14 @@ public class RadialMenu : MonoBehaviour {
 	void SetupMenu(GameObject building) {
 		currentBuilding = building;
 
-		SetupForBasicTower ();
+		if (building.GetComponentInChildren<Upgradable>() != null)
+		{
+			SetupForUpgradable(building);
+		}
+		else
+		{
+			SetupForBasicTower();
+		}
 		UpdatePosition ();
 		buildingInfo.gameObject.SetActive (true);
 		backgroundClickDetector.SetActive (true);
@@ -34,11 +41,11 @@ public class RadialMenu : MonoBehaviour {
 	}
 
 	void SetupForBasicTower() {
-		CurrentNumberOfButtons = 4;
+		CurrentNumberOfButtons = 3;
 		for(int i = 0; i < CurrentNumberOfButtons; i++) {
 			GameObject buttonObj = (GameObject)Instantiate (RadialButtonPrefab, transform.position, Quaternion.identity);
 			RadialButton button = buttonObj.GetComponent<RadialButton> ();
-			RadialButton.ButtonType type = RadialButton.ButtonType.DestroyTower;
+			RadialButton.ButtonType type = RadialButton.ButtonType.BuildBasicSpawner; // RadialButton.ButtonType.DestroyTower;
 			if (i == 0) {
 				type = RadialButton.ButtonType.BuildBasicSpawner;
 			} else if (i == 1) {
@@ -46,9 +53,29 @@ public class RadialMenu : MonoBehaviour {
 			} else if (i == 2) {
 				type = RadialButton.ButtonType.BuildRedShooter;
 			}
-			button.Setup (type, this, i);
+			button.Setup (type, this, i, true);
 			buttonObj.transform.SetParent (transform);
 			createdButtons.Add (button);
+		}
+	}
+
+	void SetupForUpgradable(GameObject building) {
+		CurrentNumberOfButtons = 1;
+		GameObject buttonObj = (GameObject)Instantiate (RadialButtonPrefab, transform.position, Quaternion.identity);
+		RadialButton button = buttonObj.GetComponent<RadialButton> ();
+		RadialButton.ButtonType type = RadialButton.ButtonType.DestroyTower;
+
+		button.Setup (type, this, 3, GameState.instance.CanSacrifice(building));
+		buttonObj.transform.SetParent (transform);
+		createdButtons.Add (button);
+
+		if (!GameState.instance.CanSacrifice(building))
+		{
+			buildingInfo.instructionsSacrifice.text = "Can't sacrifice. Tower has strength " + building.GetComponentInChildren<Upgradable>().strength + ". A level 3 tower with strength " + GameState.instance.needed_sacrifice + " is needed.";
+		}
+		else
+		{
+			buildingInfo.instructionsSacrifice.text = "";
 		}
 	}
 
@@ -76,7 +103,7 @@ public class RadialMenu : MonoBehaviour {
 	public void ButtonPressed(RadialButton.ButtonType buttonType, int power) {
 		
 		if (buttonType == RadialButton.ButtonType.DestroyTower) {
-			Destroy (currentBuilding);
+			GameState.instance.Sacrifice(currentBuilding);
 		} else {
 			GameObject prefab;
 			if (buttonType == RadialButton.ButtonType.BuildBasicShooter)
